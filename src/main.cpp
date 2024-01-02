@@ -1,8 +1,12 @@
-/* Ask for an OpenGL Core Context */
-#define GLFW_INCLUDE_GLCOREARB
-
+#include <iostream>
 #include <spdlog/spdlog.h>
+#include <glad/glad.h>
 #include <GLFW/glfw3.h>
+
+void OnFramebufferSizeChanged(GLFWwindow* window, int width, int height) {
+    SPDLOG_INFO("Framebuffer size changed: {}x{}", width, height);
+    glViewport(0, 0, width, height);
+}
 
 int main(int argc, const char** argv) {
     SPDLOG_INFO("Start program");
@@ -29,12 +33,27 @@ int main(int argc, const char** argv) {
     glfwWindowHint (GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
     SPDLOG_INFO("Create glfw window");
-    GLFWwindow* window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_NAME, nullptr, nullptr);
+    auto window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_NAME, nullptr, nullptr);
     if (!window) {
         SPDLOG_ERROR("failed to create glfw window");
         glfwTerminate();
         return -1;
     }
+    glfwMakeContextCurrent(window);
+
+    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
+        SPDLOG_ERROR("failed to initialize glad");
+        glfwTerminate();
+        return -1;
+    }
+
+
+    auto glVersion = glGetString(GL_VERSION);
+    //SPDLOG_INFO("GL Version: {}", glVersion); < 이상하게 fmt error가 난다.
+    std::cout << "GL Version: " << glVersion << std::endl;        
+
+    glfwSetFramebufferSizeCallback(window, OnFramebufferSizeChanged);
+    
 
     // SPDLOG_INFO("Start main loop");
     while (!glfwWindowShouldClose(window)) {
