@@ -31,7 +31,7 @@ int main(int argc, const char** argv) {
         return -1;
     }
 
-    SPDLOG_INFO("Start main loop");
+    // SPDLOG_INFO("Start main loop");
     while (!glfwWindowShouldClose(window)) {
         glfwPollEvents();
     }
