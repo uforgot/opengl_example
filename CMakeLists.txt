@@ -3,9 +3,10 @@ cmake_minimum_required(VERSION 3.13)
 set(PROJECT_NAME opengl_example)
 set(CMAKE_CXX_STANDARD 17)
 
-set(WINDOW_NAME "Hello, OpenGL!")
+set(WINDOW_NAME "TEST")
 set(WINDOW_WIDTH 960)
 set(WINDOW_HEIGHT 540)
+set(CMAKE_TLS_VERIFY TRUE)
 
 project(${PROJECT_NAME})
 add_executable(${PROJECT_NAME} src/main.cpp)

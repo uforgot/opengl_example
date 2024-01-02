@@ -1,7 +1,6 @@
 /* Ask for an OpenGL Core Context */
 #define GLFW_INCLUDE_GLCOREARB
 
-#include <iostream>
 #include <spdlog/spdlog.h>
 #include <GLFW/glfw3.h>
 
@@ -10,7 +9,6 @@ int main(int argc, const char** argv) {
     
     // #ifdef __APPLE__
     // /* We need to explicitly ask for a 3.2 context on OS X */
-    // glfwWindowHint (GLFW_CONTEXT_VERSION_MAJOR, 3);
     // glfwWindowHint (GLFW_CONTEXT_VERSION_MINOR, 2);
     // glfwWindowHint (GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
     // glfwWindowHint (GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
@@ -22,6 +20,13 @@ int main(int argc, const char** argv) {
         SPDLOG_ERROR("failed to initialize glfw: {}", description);
         return -1;
     }
+
+    glfwWindowHint (GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint (GLFW_CONTEXT_VERSION_MINOR, 2);
+    #ifdef __APPLE__
+    glfwWindowHint (GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+    #endif
+    glfwWindowHint (GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
     SPDLOG_INFO("Create glfw window");
     GLFWwindow* window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_NAME, nullptr, nullptr);
