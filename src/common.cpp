@@ -4,6 +4,7 @@
 #include <sstream>
 
 
+
 std::optional<std::string> LoadTextFile(const std::string& filename) {
     std::ifstream fin(filename);
     if (!fin.is_open()) {

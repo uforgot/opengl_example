@@ -1,3 +1,4 @@
+#include "shader.h"
 #include "common.h"
 
 void OnFramebufferSizeChanged(GLFWwindow* window, int width, int height) {
@@ -62,6 +63,11 @@ int main(int argc, const char** argv) {
     auto glVersion = glGetString(GL_VERSION);
     //SPDLOG_INFO("GL Version: {}", glVersion); < 이상하게 fmt error가 난다.
     std::cout << "--> GL Version: " << glVersion << std::endl;        
+
+    auto vertexShader = Shader::CreateFromFile("./shader/simple.vs", GL_VERTEX_SHADER);
+    auto fragmentShader = Shader::CreateFromFile("./shader/simple.fs", GL_FRAGMENT_SHADER);
+    SPDLOG_INFO("vertex shader id: {}", vertexShader->Get());
+    SPDLOG_INFO("fragment shader id: {}", fragmentShader->Get());
 
     OnFramebufferSizeChanged(window, WINDOW_WIDTH, WINDOW_HEIGHT);
     glfwSetFramebufferSizeCallback(window, OnFramebufferSizeChanged);

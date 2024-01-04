@@ -9,7 +9,11 @@ set(WINDOW_HEIGHT 540)
 set(CMAKE_TLS_VERIFY TRUE)
 
 project(${PROJECT_NAME})
-add_executable(${PROJECT_NAME} src/main.cpp)
+add_executable(${PROJECT_NAME} 
+  src/main.cpp
+  src/common.cpp src/common.h 
+  src/shader.cpp src/shader.h
+)
 
 # MAC OS 일 경우 프레임워크 링크 추가
 if(APPLE)

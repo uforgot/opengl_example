@@ -70,5 +70,9 @@
         "variant": "cpp",
         "vector": "cpp",
         "algorithm": "cpp"
+    },
+    "C_Cpp.intelliSenseEngineFallback": "enabled",
+    "cmake.debugConfig": {
+        "cwd": "${workspaceRoot}/src/",
     }
 }
