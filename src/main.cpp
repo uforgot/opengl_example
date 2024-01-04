@@ -1,6 +1,4 @@
-#include "common.h"
-#include "shader.h"
-#include "program.h"
+#include "context.h"
 
 void OnFramebufferSizeChanged(GLFWwindow* window, int width, int height) {
     SPDLOG_INFO("Framebuffer size changed: {} x {}", width, height);
@@ -65,13 +63,12 @@ int main(int argc, const char** argv) {
     //SPDLOG_INFO("GL Version: {}", glVersion); < 이상하게 fmt error가 난다.
     std::cout << "--> GL Version: " << glVersion << std::endl;        
 
-    ShaderPtr vertShader = Shader::CreateFromFile("./shader/simple.vs", GL_VERTEX_SHADER);
-    ShaderPtr fragShader = Shader::CreateFromFile("./shader/simple.fs", GL_FRAGMENT_SHADER);
-    SPDLOG_INFO("vertex shader id: {}", vertShader->Get());
-    SPDLOG_INFO("fragment shader id: {}", fragShader->Get());
-
-    auto program = Program::Create({vertShader, fragShader});
-    SPDLOG_INFO("program id: {}", program->Get());
+    auto context = Context::Create();
+    if(!context) {
+        SPDLOG_ERROR("failed to create context");
+        glfwTerminate();
+        return -1;
+    }
 
     OnFramebufferSizeChanged(window, WINDOW_WIDTH, WINDOW_HEIGHT);
     glfwSetFramebufferSizeCallback(window, OnFramebufferSizeChanged);
@@ -80,11 +77,12 @@ int main(int argc, const char** argv) {
     SPDLOG_INFO("Start main loop");
     while (!glfwWindowShouldClose(window)) {
         glfwPollEvents();
-        glClearColor(0.0f, 0.1f, 0.2f, 0.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
+        context->Render();
         glfwSwapBuffers(window);
     }
 
+    context.reset();
     glfwTerminate();
+    
     return 0;
 }
