@@ -13,6 +13,7 @@ add_executable(${PROJECT_NAME}
   src/main.cpp
   src/common.cpp src/common.h 
   src/shader.cpp src/shader.h
+  src/program.cpp src/program.h
 )
 
 # MAC OS 일 경우 프레임워크 링크 추가
