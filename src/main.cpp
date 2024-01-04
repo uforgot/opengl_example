@@ -58,6 +58,9 @@ int main(int argc, const char** argv) {
         return -1;
     }
 
+    OnFramebufferSizeChanged(window, WINDOW_WIDTH * 2, WINDOW_HEIGHT * 2);
+    glfwSetFramebufferSizeCallback(window, OnFramebufferSizeChanged);
+    glfwSetKeyCallback(window, OnKeyEvent);
 
     auto glVersion = glGetString(GL_VERSION);
     //SPDLOG_INFO("GL Version: {}", glVersion); < 이상하게 fmt error가 난다.
@@ -70,9 +73,6 @@ int main(int argc, const char** argv) {
         return -1;
     }
 
-    OnFramebufferSizeChanged(window, WINDOW_WIDTH, WINDOW_HEIGHT);
-    glfwSetFramebufferSizeCallback(window, OnFramebufferSizeChanged);
-    glfwSetKeyCallback(window, OnKeyEvent);
 
     SPDLOG_INFO("Start main loop");
     while (!glfwWindowShouldClose(window)) {
