@@ -15,6 +15,8 @@ add_executable(${PROJECT_NAME}
   src/shader.cpp src/shader.h
   src/program.cpp src/program.h
   src/context.cpp src/context.h
+  src/buffer.cpp src/buffer.h
+  src/vertex_layout.cpp src/vertex_layout.h
 )
 
 # MAC OS 일 경우 프레임워크 링크 추가
