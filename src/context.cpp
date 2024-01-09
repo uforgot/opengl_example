@@ -53,10 +53,10 @@ bool Context::Init() {
     SPDLOG_INFO("program id: {}", m_program->Get());
     glClearColor(0.0f, 0.1f, 0.2f, 0.0f);
 
-    auto image = Image::Create(512,512);
-    image->SetCheckImage(16,16);
-    //auto image = Image::Load("./image/container.jpg");
-    //if (!image) return false;
+    // auto image = Image::Create(512,512);
+    // image->SetCheckImage(16,16);
+    auto image = Image::Load("./image/container.jpg");
+    if (!image) return false;
     m_texture = Texture::CreateFromImage(image.get());
 
     auto image2 = Image::Load("./image/awesomeface.png");
@@ -71,6 +71,18 @@ bool Context::Init() {
     m_program->Use();
     glUniform1i(glGetUniformLocation(m_program->Get(), "tex"), 0);
     glUniform1i(glGetUniformLocation(m_program->Get(), "tex"), 1);
+
+    // glm::vec4 vec(1.0f, 0.0f, 0.0f, 1.0f);
+    // auto trans = glm::translate(glm::mat4(1.0f), glm::vec3(1.0f, 1.0f, 0.0f));
+    // auto rot = glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0.0,0.0,1.0));
+    // auto scale = glm::scale(glm::mat4(1.0f), glm::vec3(3.0f));
+    // vec = trans * rot * scale * vec;
+    // SPDLOG_INFO("vec: {}, {}, {}", vec.x, vec.y, vec.z);
+
+    auto transform = glm::rotate( glm::scale(glm::mat4(1.0f), glm::vec3(3.0f)), glm::radians(30.0f), glm::vec3(0.0,0.0,1.0));
+    // auto transform = glm::translate(glm::mat4(1.0f), glm::vec3(0.3f, 0.2f, 0.0f));
+    auto transformLoc = glGetUniformLocation(m_program->Get(), "transform");
+    glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(transform));
 
     return true;
 }
