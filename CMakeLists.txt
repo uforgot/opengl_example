@@ -18,6 +18,7 @@ add_executable(${PROJECT_NAME}
   src/buffer.cpp src/buffer.h
   src/vertex_layout.cpp src/vertex_layout.h
   src/image.cpp src/image.h
+  src/texture.cpp src/texture.h
 )
 
 # MAC OS 일 경우 프레임워크 링크 추가
