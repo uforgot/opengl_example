@@ -165,7 +165,7 @@ void Context::MouseMove(double x, double y) {
     auto pos = glm::vec2((float)x, (float)y);
     auto deltaPos = pos - m_prevMousePos;
 
-    const float  cameraRotSpeed = 0.8f;
+    const float  cameraRotSpeed = 0.4f;
     m_cameraYaw -= deltaPos.x * cameraRotSpeed;
     m_cameraPitch -= deltaPos.y * cameraRotSpeed;
 

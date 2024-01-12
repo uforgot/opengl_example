@@ -1,5 +1,8 @@
 #include "context.h"
 
+#include <imgui_impl_glfw.h>
+#include <imgui_impl_opengl3.h>
+
 void OnFramebufferSizeChanged(GLFWwindow* window, int width, int height) {
     auto context = (Context*)glfwGetWindowUserPointer(window);
     context->Reshape(width, height);
@@ -72,6 +75,13 @@ int main(int argc, const char** argv) {
     auto glVersion = glGetString(GL_VERSION);
     //SPDLOG_INFO("GL Version: {}", glVersion); < 이상하게 fmt error가 난다.
     std::cout << "--> GL Version: " << glVersion << std::endl;        
+
+    auto imguiContext = ImGui::CreateContext();
+    ImGui::SetCurrentContext(imguiContext);
+    ImGui_ImplGlfw_InitForOpenGL(window, false);
+    ImGui_ImplOpenGL3_Init();
+    ImGui_ImplOpenGL3_CreateFontsTexture();
+    ImGui_ImplOpenGL3_CreateDeviceObjects();
 
     auto context = Context::Create();
     if(!context) {
