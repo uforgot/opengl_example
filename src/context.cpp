@@ -1,6 +1,7 @@
 #include "context.h"
 #include "image.h"
 
+#include <imgui.h>
 
 ContextUPtr Context::Create() {
     auto context = ContextUPtr(new Context());
@@ -81,8 +82,6 @@ bool Context::Init() {
     SPDLOG_INFO("program id: {}", m_program->Get());
     glClearColor(0.0f, 0.1f, 0.2f, 0.0f);
 
-    // auto image = Image::Create(512,512);
-    // image->SetCheckImage(16,16);
     auto image = Image::Load("./image/container.jpg");
     if (!image) return false;
     m_texture = Texture::CreateFromImage(image.get());
@@ -99,17 +98,6 @@ bool Context::Init() {
     m_program->Use();
     m_program->SetUniform("tex", 0);
     m_program->SetUniform("tex2", 1);
-
-    // glm::vec4 vec(1.0f, 0.0f, 0.0f, 1.0f);
-    // auto trans = glm::translate(glm::mat4(1.0f), glm::vec3(1.0f, 1.0f, 0.0f));
-    // auto rot = glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0.0,0.0,1.0));
-    // auto scale = glm::scale(glm::mat4(1.0f), glm::vec3(3.0f));
-    // vec = trans * rot * scale * vec;
-    // SPDLOG_INFO("vec: {}, {}, {}", vec.x, vec.y, vec.z);
-
-    
-    // auto transform = glm::rotate( glm::scale(glm::mat4(1.0f), glm::vec3(0.5f)), glm::radians(30.0f), glm::vec3(0.0,0.0,1.0));
-    // transform =  transform * glm::translate(glm::mat4(1.0f), glm::vec3(1.f, 0.5f, 0.0f));
 
     return true;
 }
@@ -179,6 +167,23 @@ void Context::MouseMove(double x, double y) {
 }
 
 void Context::Render() {
+    if(ImGui::Begin("UI Window")) {
+        if (ImGui::ColorEdit4("clear color", glm::value_ptr(m_clearColor)) ) {
+            glClearColor(m_clearColor.r, m_clearColor.g, m_clearColor.b, m_clearColor.a);
+        }
+        ImGui::Separator();
+        ImGui::DragFloat3("camera pos", glm::value_ptr(m_cameraPos), 0.1f);
+        ImGui::DragFloat("camera yaw", &m_cameraYaw, 0.5f, 0.0f, 360.0f);
+        ImGui::DragFloat("camera pitch", &m_cameraPitch, 0.5f, -89.0f, 89.0f);
+        ImGui::Separator();
+        if (ImGui::Button("reset camera")) {
+            m_cameraYaw  = 0.0f;
+            m_cameraPitch = 0.0f;
+            m_cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
+        }
+    }
+    ImGui::End();
+
     std::vector<glm::vec3> cubePositions = {
         glm::vec3( 0.0f,  0.0f,  0.0f), 
         glm::vec3( 2.0f,  5.0f, -15.0f), 
@@ -201,29 +206,6 @@ void Context::Render() {
 
     auto projection = glm::perspective(glm::radians(45.0f), (float)m_width / (float)m_height, 0.1f, 100.0f);
     
-    // float angle = glfwGetTime() * glm::pi<float>() * 0.5f;
-    // auto x = sinf(angle) * 10.0f;
-    // auto z = cosf(angle) * 10.0f;
-
-    // auto view = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f,0.0f,-3.0f));
-
-    // auto cameraPos = glm::vec3(x, 0.0f, z);
-    // auto cameraTarget = glm::vec3(0.0f, 0.0f, 0.0f);
-    // auto cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
-
-    // auto cameraZ = glm::normalize(cameraPos - cameraTarget);
-    // auto cameraX = glm::normalize(glm::cross(cameraUp, cameraZ));
-    // auto cameraY = glm::cross(cameraZ, cameraX);
-
-    // auto cameraMat = glm::mat4(
-    //     glm::vec4(cameraX, 0.0f),
-    //     glm::vec4(cameraY, 0.0f),
-    //     glm::vec4(cameraZ, 0.0f),
-    //     glm::vec4(cameraPos, 1.0f)
-    // );
-
-    // auto view = glm::inverse(cameraMat);
-
     auto view = glm::lookAt(m_cameraPos, m_cameraPos + m_cameraFront, m_cameraUp );
 
     for (size_t i=0;i<cubePositions.size();i++) {
@@ -239,12 +221,5 @@ void Context::Render() {
         m_program->SetUniform("transform", transform);
         glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
     }
-
-    // m_program->Use();
-    // glUniform4f(loc, t*t, 2.0f *t*(1.0f-t), (1.0f-t)*(1.0f-t), 1.0f);
-    
-    
-
-    // time += 0.016f;
 }
 
