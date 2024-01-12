@@ -2,7 +2,8 @@
 
 void OnFramebufferSizeChanged(GLFWwindow* window, int width, int height) {
     SPDLOG_INFO("Framebuffer size changed: {} x {}", width, height);
-    glViewport(0, 0, width, height);
+    auto context = (Context*)glfwGetWindowUserPointer(window);
+    context->Reshape(width, height);
 }
 
 void OnKeyEvent(GLFWwindow* window, int key, int scancode, int action, int mods) {
@@ -57,11 +58,6 @@ int main(int argc, const char** argv) {
         glfwTerminate();
         return -1;
     }
-
-    OnFramebufferSizeChanged(window, WINDOW_WIDTH * 2, WINDOW_HEIGHT * 2);
-    glfwSetFramebufferSizeCallback(window, OnFramebufferSizeChanged);
-    glfwSetKeyCallback(window, OnKeyEvent);
-
     auto glVersion = glGetString(GL_VERSION);
     //SPDLOG_INFO("GL Version: {}", glVersion); < 이상하게 fmt error가 난다.
     std::cout << "--> GL Version: " << glVersion << std::endl;        
@@ -73,10 +69,18 @@ int main(int argc, const char** argv) {
         return -1;
     }
 
+    glfwSetWindowUserPointer(window, context.get());
+
+    OnFramebufferSizeChanged(window, WINDOW_WIDTH * 2, WINDOW_HEIGHT * 2);
+    glfwSetFramebufferSizeCallback(window, OnFramebufferSizeChanged);
+    glfwSetKeyCallback(window, OnKeyEvent);
+
+
 
     SPDLOG_INFO("Start main loop");
     while (!glfwWindowShouldClose(window)) {
         glfwPollEvents();
+        context->ProcessInput(window);
         context->Render();
         glfwSwapBuffers(window);
     }
