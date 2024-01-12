@@ -1,9 +1,20 @@
 #include "context.h"
 
 void OnFramebufferSizeChanged(GLFWwindow* window, int width, int height) {
-    SPDLOG_INFO("Framebuffer size changed: {} x {}", width, height);
     auto context = (Context*)glfwGetWindowUserPointer(window);
     context->Reshape(width, height);
+}
+
+void OnCursorPos(GLFWwindow* window, double x, double y) {
+    auto context = (Context*)glfwGetWindowUserPointer(window);
+    context->MouseMove(x, y);
+}
+
+void OnMouseButton(GLFWwindow* window, int button, int action, int mods) {
+    auto context = (Context*)glfwGetWindowUserPointer(window);
+    double x, y;
+    glfwGetCursorPos(window, &x, &y);
+    context->MouseButton(button, action, x, y);
 }
 
 void OnKeyEvent(GLFWwindow* window, int key, int scancode, int action, int mods) {
@@ -72,7 +83,10 @@ int main(int argc, const char** argv) {
     glfwSetWindowUserPointer(window, context.get());
 
     OnFramebufferSizeChanged(window, WINDOW_WIDTH * 2, WINDOW_HEIGHT * 2);
+    
     glfwSetFramebufferSizeCallback(window, OnFramebufferSizeChanged);
+    glfwSetMouseButtonCallback(window, OnMouseButton);
+    glfwSetCursorPosCallback(window, OnCursorPos);
     glfwSetKeyCallback(window, OnKeyEvent);
 
 
