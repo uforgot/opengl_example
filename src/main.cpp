@@ -5,6 +5,7 @@
 
 void OnFramebufferSizeChanged(GLFWwindow* window, int width, int height) {
     auto context = (Context*)glfwGetWindowUserPointer(window);
+    SPDLOG_INFO("reisze");
     context->Reshape(width, height);
 }
 
